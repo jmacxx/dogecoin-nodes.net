@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+   {{ super() }}
+    <center>
+    <table>
+    <tr>
+        <th>#</th>
+        <th>IP Address</th>
+        <th>Version</th>
+        <th>Country</th>
+        <th>Height</th>
+        <th>Flags</th>
+        <th>Version 1.x</th>
+    </tr>
+
+    {% for post in posts %}
+        <tr>
+            <td>{{ post.count }}</td>
+            <td>{{ post.node_ip }}</td>
+            <td>{{ post.node_version }}</td>
+            <td>{{ post.node_country }}</td>
+            <td>{{ post.node_height }}</td>
+            <td>{{ post.node_flags }}</td>
+            {% if post.needs_update == 1 %}
+                <td><a href="/item-detail/{{ post.id }}">SUCH UPDATE NEEDED</a></td>
+            {% elif post.needs_update == -1 %}
+                <td>VERY NEW!!</td>
+            {% else %}
+                <td>VERY CURRENT</td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+    </center>
+
+{% endblock %}
+
+

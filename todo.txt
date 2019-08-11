@@ -1,0 +1,63 @@
+
+
+    set-up
+    ~~~~~~
+
+    we will initially capture the list of active nodes and save it to a database.  
+    only this list will be eligible for rewards, in order to prevent people claiming rewards just for setting up a node with an old version.
+
+
+    workflow - user perspective
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    user opens website (dogecoin-nodes.net)
+    a list is shown of dogecoin nodes and their current version
+    user can click on a 'my node' button next to their node
+    a form is presented where they can claim a dogecoin reward for upgrading to the latest version
+    - the checks that the user's IP address matches the address of the node
+    - they can enter their dogecoin address to claim the reward
+    - no personal identifying information is needed, the claim is only based on IP address match
+    - if the user's node is old, it tells the user to upgrade and try again
+    - if the user's node is the current latest version, it checks database to see if the user has claimed the reward before
+    - if the reward has not been claimed already, a dogecoin payment is sent to the supplied address, and the transaction ID recorded in the database
+
+
+
+    additional features
+    ~~~~~~~~~~~~~~~~~~~
+
+    - we can show a column in the node list showing which rewards have been claimed!
+    - we can show a % upgraded figure
+
+
+
+
+
+    development environment & set-up (Python 3 / Flask / sqlite)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    (https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+
+    mkdir dogecoin-nodes.net
+    cd dogecoin-nodes.net
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install flask
+    pip install flask-sqlalchemy
+    pip install flask-migrate
+    pip install flask-bootstrap
+
+    source venv/bin/activate
+    export FLASK_APP=dogecoin-nodes.py
+    flask shell
+    flask db init
+    flask db migrate -m 'init tables'
+    flask db upgrade
+
+    sqlite3 app.db      (to query the database)
+    flask run           (to run the http site)
+
+    optional set up in PYCHARM IDE:
+    (https://blog.miguelgrinberg.com/post/setting-up-a-flask-application-in-pycharm)
+
+
+
