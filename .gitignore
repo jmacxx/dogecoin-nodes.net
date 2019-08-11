@@ -1,0 +1,9 @@
+.idea/*
+__pycache__/*
+migrations/*
+app.db
+app/*.pyc
+app/__pycache__/*
+*.pyc
+venv/*
+

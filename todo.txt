@@ -3,8 +3,9 @@
     set-up
     ~~~~~~
 
-    we will initially capture the list of active nodes and save it to a database.  
-    only this list will be eligible for rewards, in order to prevent people claiming rewards just for setting up a node with an old version.
+    We will initially capture the list of active nodes and save it to a database.  
+    Only this list will be eligible for rewards, in order to prevent people claiming 
+    rewards just for setting up a node with an old version.
 
 
     workflow - user perspective
@@ -14,12 +15,12 @@
     a list is shown of dogecoin nodes and their current version
     user can click on a 'my node' button next to their node
     a form is presented where they can claim a dogecoin reward for upgrading to the latest version
-    - the checks that the user's IP address matches the address of the node
+    - system checks that the user's IP address matches the address of the node
     - they can enter their dogecoin address to claim the reward
     - no personal identifying information is needed, the claim is only based on IP address match
     - if the user's node is old, it tells the user to upgrade and try again
-    - if the user's node is the current latest version, it checks database to see if the user has claimed the reward before
-    - if the reward has not been claimed already, a dogecoin payment is sent to the supplied address, and the transaction ID recorded in the database
+    - if current latest version, it checks database to see if the user has claimed the reward before
+    - a dogecoin payment is sent to the supplied address, and the transaction ID recorded in the database
 
 
 
@@ -45,6 +46,7 @@
     pip install flask-sqlalchemy
     pip install flask-migrate
     pip install flask-bootstrap
+    pip install flask-wtf
 
     source venv/bin/activate
     export FLASK_APP=dogecoin-nodes.py
@@ -58,6 +60,18 @@
 
     optional set up in PYCHARM IDE:
     (https://blog.miguelgrinberg.com/post/setting-up-a-flask-application-in-pycharm)
+
+
+
+    tasks to be worked on
+    ~~~~~~~~~~~~~~~~~~~~~
+    figure out a user's IP address, e.g. jsonify({'ip': request.remote_addr})
+    handle IPv6 as well as IPv4
+    create a module to handle doge transaction sending.  use a private key stored in config.py
+    in the DB, store both the original and the current node version (not sure if this is necessary)
+    html/css style needs beautifying
+
+
 
 
 
