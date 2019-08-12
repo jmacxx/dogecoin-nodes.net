@@ -22,10 +22,10 @@
             <td>{{ post.node_country }}</td>
             <td>{{ post.node_height }}</td>
             <td>{{ post.node_flags }}</td>
-            {% if post.needs_update == 1 %}
-                <td><a href="/item-detail/{{ post.id }}">SUCH UPDATE NEEDED</a></td>
-            {% elif post.needs_update == -1 %}
+            {% if post.id == 0 %}
                 <td>VERY NEW!!</td>
+            {% elif post.needs_update() %}
+                <td><a href="/item-detail/{{ post.id }}">SUCH UPDATE NEEDED</a></td>
             {% else %}
                 <td>VERY CURRENT</td>
             {% endif %}

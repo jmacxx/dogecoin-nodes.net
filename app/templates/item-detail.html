@@ -2,18 +2,36 @@
 
 {% block content %}
    {{ super() }}
-    <br /><br />
-<center>
-            <h4>IP = {{ post.node_ip }}</h4>
-            <h4>Version = {{ post.node_version }}</h4>
-            <h4>Country = {{ post.node_country }}</h4>
-            <h4>Height = {{ post.node_height }}</h4>
-            <h4>Flags = {{ post.node_flags }}</h4>
-            <h4>SUCH UPDATE NEEDED</h4>
-            <a href="/claim/{{ post.id }}">Claim</a>
-</center>
+    <center>
+    As a community, we want to encourage node operators to upgrade to the latest version.
+    <br />
+    You prove ownership of your node by your IP address matching the node address.
+    <br />
+    If this requirement is satisfied and our database shows that your node has been upgraded since the snapshot was taken, we offer an incentive prize of {{ post.reward_amount }} Dogecoin!
+    <br />
+    To keep this decentralised and anonymous, we will not collect any personal information from you.
+    <br />
+    <br />
 
-<br /><br />
+        <h4>
+        <table border=0>
+        <tr><td>IP:</td><td>{{ post.node_ip }}</td><td>&nbsp;</td><td></td></tr>
+        <tr><td>Version:</td><td>{{ post.node_version }}</td><td>&nbsp;</td><td></td></tr>
+        <tr><td>Country:</td><td>{{ post.node_country }}</td><td>&nbsp;</td><td></td></tr>
+        <tr><td>Height:</td><td>{{ post.node_height }}</td><td>&nbsp;</td><td></td></tr>
+        <tr><td>Flags:</td><td>{{ post.node_flags }}</td><td>&nbsp;</td><td></td></tr>
+        </table>
+        </h4>
+        {% if post.needs_update() %}
+            <br />
+            <h4>SUCH UPDATE NEEDED</h4>
+            Is this your node?  Upgrade it to 1.14 and <a href="/claim/{{ post.id }}">claim</a> a reward of D{{ post.reward_amount }}!!
+        {% else %}
+            <br>Not eligible for upgrade reward.  Such sad.
+        {% endif %}
+
+    </center>
+    <br /><br />
 
 {% endblock %}
 

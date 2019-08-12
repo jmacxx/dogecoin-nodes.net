@@ -70,7 +70,9 @@
     create a module to handle doge transaction sending.  use a private key stored in config.py
     in the DB, store both the original and the current node version (not sure if this is necessary)
     html/css style needs beautifying
-    show flag icons next to country digraph in node list (https://github.com/hjnilsson/country-flags)
+    the textual information presented to users could be improved
+    show small flag icons next to country digraph in node list (https://github.com/hjnilsson/country-flags)
+    validate the supplied dogecoin address (checksum)
 
 
 

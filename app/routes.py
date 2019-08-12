@@ -24,13 +24,9 @@ def list_inventory():
         post.count = count
         db_rec = db.session.query(Inventory).filter(Inventory.node_ip == post.node_ip).first()
         if db_rec is None:
-            post.needs_update = -1
+            post.id = 0
         else:
             post.id = db_rec.id
-            if post.node_version == "/Shibetoshi:1.14.0/":
-                post.needs_update = 0
-            else:
-                post.needs_update = 1
     return render_template('list-inventory.html', title='List Nodes', posts=posts)
 
 
@@ -72,19 +68,20 @@ def getCurrentNodeListFromWeb():
 @app.route('/item-detail/<item_id>')
 def item_detail(item_id):
     inv = Inventory.query.get(item_id)
+    inv.reward_amount = app.config['DOGECOIN_REWARD']
     return render_template('item-detail.html', title='Item Detail', post=inv)
 
 
 @app.route('/claim/<item_id>', methods=['GET', 'POST'])
 def claim(item_id):
-    form = ClaimPrizeForm()
+    inv = Inventory.query.get(item_id)
+    sr = request.remote_addr
+    form = ClaimPrizeForm(nodeversion=inv.node_version, nodeipaddress=inv.node_ip, youripaddress=sr)
     if form.validate_on_submit():
         dogecoinaddress = form.dogecoinaddress
-        ipaddress = form.ipaddress
         # note we should obtain the user's IP address programmatically
         flash('Congratulations, you have claimed you prize of much dogecoin!')
         return redirect('/index')
-    inv = Inventory.query.get(item_id)
     return render_template('claim.html', title='Claim', form=form, post=inv)
 
 

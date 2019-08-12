@@ -1,4 +1,4 @@
-from app import db
+from app import app,db
 
 
 class Inventory(db.Model):
@@ -15,4 +15,7 @@ class Inventory(db.Model):
     def __repr__(self):
         return '<Inventory {}>'.format(self.node_ip)
 
-
+    def needs_update(self):
+        if self.node_version == app.config['DOGECOIN_NODE_VERSION']:
+            return False
+        return True
