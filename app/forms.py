@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app import app, db
+from app.base58 import addressValidate
 from app.models import Inventory
 
 
@@ -17,6 +18,8 @@ class ClaimPrizeForm(FlaskForm):
         # base58check?
         if dogecoinaddress.data[:1] != 'D' or len(dogecoinaddress.data) != 34:
             raise ValidationError('Please enter a dogecoin address.')
+        if addressValidate(dogecoinaddress.data) == False:
+            raise ValidationError('Dogecoin address is not valid.')
         pass
 
     def validate_nodeversion(self, nodeversion):

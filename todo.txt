@@ -47,6 +47,7 @@
     pip install flask-migrate
     pip install flask-bootstrap
     pip install flask-wtf
+    pip install pycryptodome
 
     source venv/bin/activate
     export FLASK_APP=dogecoin-nodes.py
@@ -65,14 +66,11 @@
 
     tasks to be worked on
     ~~~~~~~~~~~~~~~~~~~~~
-    figure out a user's IP address, e.g. jsonify({'ip': request.remote_addr})
     handle IPv6 as well as IPv4
     create a module to handle doge transaction sending.  use a private key stored in config.py
     in the DB, store both the original and the current node version (not sure if this is necessary)
-    html/css style needs beautifying
     the textual information presented to users could be improved
     show small flag icons next to country digraph in node list (https://github.com/hjnilsson/country-flags)
-    validate the supplied dogecoin address (checksum)
 
 
 
