@@ -30,7 +30,8 @@
     - we can show a column in the node list showing which rewards have been claimed!
     - we can show a % upgraded figure
 
-
+    - node owners can add information about their node: 
+         a name & description for example.  Only allow this from the IP address of the node itself.
 
 
 
