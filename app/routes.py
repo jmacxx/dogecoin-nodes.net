@@ -10,7 +10,7 @@ import json
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title='Home', posts=None)
+    return render_template('index.html', title='Home', reward_amount=current_dogecoin_reward())
 
 
 @app.route('/list-inventory')
@@ -27,7 +27,7 @@ def list_inventory():
             post.id = 0
         else:
             post.id = db_rec.id
-    return render_template('list-inventory.html', title='List Nodes', posts=posts)
+    return render_template('list-inventory.html', title='List Nodes', posts=posts, reward_amount=current_dogecoin_reward())
 
 
 @app.route('/init-db')
@@ -43,33 +43,11 @@ def init_db():
     return redirect('/index')
 
 
-def getCurrentNodeListFromWeb():
-    retInventory = list()
-    response = urllib.request.urlopen('https://api.blockchair.com/dogecoin/nodes')
-    json_nodes = json.loads(response.read().decode('utf-8'))
-    for key in json_nodes:
-        value = json_nodes[key]
-        if key == 'data':
-            nodes = value['nodes']
-            for nodes_key in nodes:
-                i = Inventory()
-                i.node_ip = str(nodes_key)
-                i.node_version = str(nodes[nodes_key]['version'])
-                i.node_country = str(nodes[nodes_key]['country'])
-                i.node_height = str(nodes[nodes_key]['height'])
-                i.node_flags = str(nodes[nodes_key]['flags'])
-                # only include dogecoin nodes (shibetoshi)
-                if i.node_version[:12] == '/Shibetoshi:':
-                    retInventory.append(i)
-    return retInventory
-
-
-
 @app.route('/item-detail/<item_id>')
 def item_detail(item_id):
     inv = Inventory.query.get(item_id)
     inv.reward_amount = app.config['DOGECOIN_REWARD']
-    return render_template('item-detail.html', title='Item Detail', post=inv)
+    return render_template('item-detail.html', title='Item Detail', post=inv, reward_amount=current_dogecoin_reward())
 
 
 @app.route('/claim/<item_id>', methods=['GET', 'POST'])
@@ -82,7 +60,35 @@ def claim(item_id):
         # note we should obtain the user's IP address programmatically
         flash('Congratulations, you have claimed you prize of much dogecoin!')
         return redirect('/index')
-    return render_template('claim.html', title='Claim', form=form, post=inv)
+    return render_template('claim.html', title='Claim', form=form, post=inv, reward_amount=current_dogecoin_reward())
 
 
+# utility routines
+def getCurrentNodeListFromWeb():
+    retInventory = list()
+    response = urllib.request.urlopen('https://api.blockchair.com/dogecoin/nodes')
+    json_nodes = json.loads(response.read().decode('utf-8'))
+    for key in json_nodes:
+        value = json_nodes[key]
+        if key == 'data':
+            nodes = value['nodes']
+            for nodes_key in nodes:
+                i = Inventory()
+                i.node_ip = normalise_ip_strip_port(str(nodes_key))
+                i.node_version = str(nodes[nodes_key]['version'])
+                i.node_country = str(nodes[nodes_key]['country'])
+                i.node_height = str(nodes[nodes_key]['height'])
+                i.node_flags = str(nodes[nodes_key]['flags'])
+                # only include dogecoin nodes (shibetoshi)
+                if i.node_version[:12] == '/Shibetoshi:':
+                    retInventory.append(i)
+    return retInventory
 
+def normalise_ip_strip_port(in_ip):
+    # the last : and digits are the port, strip it off
+    port_start = in_ip.rfind(':')
+    retVal = in_ip[0:port_start]  # remove the port designator from
+    return retVal
+
+def current_dogecoin_reward():
+    return app.config['DOGECOIN_REWARD']

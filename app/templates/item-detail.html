@@ -17,7 +17,9 @@
         <table border=0>
         <tr><td>IP:</td><td>{{ post.node_ip }}</td><td>&nbsp;</td><td></td></tr>
         <tr><td>Version:</td><td>{{ post.node_version }}</td><td>&nbsp;</td><td></td></tr>
-        <tr><td>Country:</td><td>{{ post.node_country }}</td><td>&nbsp;</td><td></td></tr>
+        <tr><td>Country:</td><td>{{ post.node_country }} <img src="/static/images/thumb.{{ post.node_country }}.png"></img></td><td>&nbsp;</td><td></td></tr>
+
+			
         <tr><td>Height:</td><td>{{ post.node_height }}</td><td>&nbsp;</td><td></td></tr>
         <tr><td>Flags:</td><td>{{ post.node_flags }}</td><td>&nbsp;</td><td></td></tr>
         </table>

@@ -28,27 +28,39 @@ $(function(){
 {% endblock %}
 
 
+{% block body %}
 
+	{% block content %}
+		<center><h1>dogecoin-nodes.net</h1></center>
+		<center><h3>Upgrade to v1.14!!!</h3></center>
+		<br />
 
-{% block content %}
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<ul>
+				    {% for message in messages %}
+				    <li>{{ message }}</li>
+				    {% endfor %}
+				</ul>
+				{% endif %}
+				{% endwith %}
 
-<center><h1>dogecoin-nodes.net</h1></center>
-<center><h3>Upgrade to v1.14!!!</h3></center>
-<br />
+		<br />
+		<br />
+		<br />
+	{% endblock %}
 
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+	<div id="footer">
+	{% block footer %}
+		<br />
+		<br />
+		<hr />
+		<center><small>
+		(c) 2019 Wowee0 & _nformant |
+		Current incentive prize: {{ reward_amount }} Dogecoin!
+		<small></center><br />
+	{% endblock %}</div>
 
-<br />
-<br />
-<br />
 
 {% endblock %}
 

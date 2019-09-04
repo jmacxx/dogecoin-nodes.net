@@ -2,38 +2,48 @@
 
 {% block content %}
    {{ super() }}
+	<div></div>
+	<div></div>
+	<div></div>
     <div class="span10 offset1">
-    <h1>Claim</h1>
-    <form class="well form-search" action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.nodeipaddress.label }}<br>
-            {{ form.nodeipaddress(size=32, readonly=true) }}<br>
-        </p>
-        <p>
-            {{ form.youripaddress.label }}<br>
-            {{ form.youripaddress(size=32, readonly=true) }}<br>
-            {% for error in form.youripaddress.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.nodeversion.label }}<br>
-            {{ form.nodeversion(size=32, readonly=true) }}<br>
-            {% for error in form.nodeversion.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.dogecoinaddress.label }}<br>
-            {{ form.dogecoinaddress(size=32, style="width: 50%") }}<br>
-            {% for error in form.dogecoinaddress.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <br>
-        <p>{{ form.submit(class_="btn btn-primary") }}</p>
-    </form>
+		<h1>Claim</h1>
+		<form class="well form-search" action="" method="post">
+		    {{ form.hidden_tag() }}
+		    <p>
+		        {{ form.nodeipaddress.label }}<br>
+		        {{ form.nodeipaddress(size=32, style="width: 50%", readonly=true) }}<br>
+		    </p>
+		    <p>
+		        {{ form.youripaddress.label }}<br>
+		        {{ form.youripaddress(size=32, style="width: 50%", readonly=true) }}<br>
+		        {% for error in form.youripaddress.errors %}
+		        <span style="color: red;">[{{ error }}]</span>
+		        {% endfor %}
+		    </p>
+		    <p>
+		        {{ form.nodeversion.label }}<br>
+		        {{ form.nodeversion(size=32, style="width: 50%", readonly=true) }}<br>
+		        {% for error in form.nodeversion.errors %}
+		        <span style="color: red;">[{{ error }}]</span>
+		        {% endfor %}
+		    </p>
+		    <p>
+		        {{ form.dogecoinaddress.label }}<br>
+		        {{ form.dogecoinaddress(size=32, style="width: 50%") }}<br>
+		        {% for error in form.dogecoinaddress.errors %}
+		        <span style="color: red;">[{{ error }}]</span>
+		        {% endfor %}
+		    </p>
+		    <br>
+		    <p>{{ form.submit(class_="btn btn-primary") }}</p>
+		</form>
     </div>
+	<div></div>
+	<div></div>
+
+    <br>
+    <br>
+    <br>
+
 {% endblock %}
 

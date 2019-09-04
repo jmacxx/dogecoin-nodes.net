@@ -1,11 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-   {{ super() }}
+{{super()}}
 
-<center><a href='\init-db'>init-db [admin only]</a></center>
-<center><a href='\list-inventory'>show me the node list</a></center>
 
-{%- endblock content %}
 
+
+    <center>
+    As a community, we want to encourage node operators to upgrade to the latest version.
+    <br />
+    You prove ownership of your node by your IP address matching the node address.
+    <br />
+    If this requirement is satisfied and our database shows that your node has been upgraded since the snapshot was taken, we offer an incentive prize of {{ reward_amount }} Dogecoin!
+    <br />
+    To keep this decentralised and anonymous, we will not collect any personal information from you.
+    <br />
+    <br />
+
+	<center><a href='\init-db'>init-db [admin only]</a></center>
+	<center><a href='\list-inventory'>show me the node list</a></center>
+
+
+{% endblock %}
 
