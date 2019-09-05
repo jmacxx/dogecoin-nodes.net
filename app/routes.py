@@ -74,6 +74,9 @@ def claim(item_id):
     node_ver_new = inv.node_ver_new
     if node_ver_new == None:
         node_ver_new = "Please upgrade!"
+    if inv.reward_claimed():            # don't let them claim more than once!
+        flash("Reward for that node has already been claimed!")
+        return redirect('/index')
     form = ClaimPrizeForm(nodeversionorg=inv.node_ver_org, nodeversionnew=node_ver_new, nodeipaddress=inv.node_ip, youripaddress=sr)
     if form.validate_on_submit():
         dogecoinaddress = form.dogecoinaddress
