@@ -5,6 +5,7 @@ from app.models import Inventory
 from app.forms import ClaimPrizeForm
 import urllib.request
 import json
+from datetime import datetime
 
 
 @app.route('/')
@@ -17,17 +18,12 @@ def index():
 def list_inventory():
     # we are only going to allow the ones that are in the original database list to be eligible for prize
     # this is to prevent people gaming the system by intentionally setting up new nodes with old versions
-    posts = getCurrentNodeListFromWeb()
+    invRecords = Inventory.query.all()
     count = 0
-    for post in posts:
+    for post in invRecords:
         count = count + 1
         post.count = count
-        db_rec = db.session.query(Inventory).filter(Inventory.node_ip == post.node_ip).first()
-        if db_rec is None:
-            post.id = 0
-        else:
-            post.id = db_rec.id
-    return render_template('list-inventory.html', title='List Nodes', posts=posts, reward_amount=current_dogecoin_reward())
+    return render_template('list-inventory.html', title='List Nodes', posts=invRecords, reward_amount=current_dogecoin_reward())
 
 
 @app.route('/init-db')
@@ -43,6 +39,27 @@ def init_db():
     return redirect('/index')
 
 
+#this refreshes our original snapshot records with new information,
+# such as the latest version number and the last_seen timestamp
+# NB: it intentionally does not add new records to the snapshot
+@app.route('/refresh-db')
+def refresh_db():
+    posts = getCurrentNodeListFromWeb()
+    count = 0
+    for new_rec in posts:
+        count = count + 1
+        new_rec.count = count
+        db_rec = db.session.query(Inventory).filter(Inventory.node_ip == new_rec.node_ip).first()
+        if db_rec is None:
+            new_rec.id = 0
+        else:
+            new_rec.id = db_rec.id
+            db_rec.last_seen = new_rec.last_seen
+            db_rec.node_ver_new = new_rec.node_ver_org
+            db.session.commit()  # write the changed fields to the database
+    return redirect('/index')
+
+
 @app.route('/item-detail/<item_id>')
 def item_detail(item_id):
     inv = Inventory.query.get(item_id)
@@ -54,13 +71,26 @@ def item_detail(item_id):
 def claim(item_id):
     inv = Inventory.query.get(item_id)
     sr = request.remote_addr
-    form = ClaimPrizeForm(nodeversion=inv.node_version, nodeipaddress=inv.node_ip, youripaddress=sr)
+    node_ver_new = inv.node_ver_new
+    if node_ver_new == None:
+        node_ver_new = "Please upgrade!"
+    form = ClaimPrizeForm(nodeversionorg=inv.node_ver_org, nodeversionnew=node_ver_new, nodeipaddress=inv.node_ip, youripaddress=sr)
     if form.validate_on_submit():
         dogecoinaddress = form.dogecoinaddress
-        # note we should obtain the user's IP address programmatically
-        flash('Congratulations, you have claimed you prize of much dogecoin!')
-        return redirect('/index')
+        inv = send_prize(inv, dogecoinaddress)
+        return render_template('broadcast.html', title='Broadcast', prize_amount=inv.prize_amount,
+                               prize_txid=inv.prize_txid)
     return render_template('claim.html', title='Claim', form=form, post=inv, reward_amount=current_dogecoin_reward())
+
+
+def send_prize(inv, dogecoinaddress):
+    # create a transaction to send some doge to dogecoinaddress
+    # broadcast it and get the txid
+    # save the txid in the Inventory record
+    inv.prize_amount = 1234
+    inv.prize_txid = '23487623498762349872364823469823746928346239874629387'
+    db.session.commit()  # write the changed fields to the database
+    return inv
 
 
 # utility routines
@@ -75,12 +105,13 @@ def getCurrentNodeListFromWeb():
             for nodes_key in nodes:
                 i = Inventory()
                 i.node_ip = normalise_ip_strip_port(str(nodes_key))
-                i.node_version = str(nodes[nodes_key]['version'])
+                i.node_ver_org = str(nodes[nodes_key]['version'])
                 i.node_country = str(nodes[nodes_key]['country'])
-                i.node_height = str(nodes[nodes_key]['height'])
+                i.node_height = nodes[nodes_key]['height']
                 i.node_flags = str(nodes[nodes_key]['flags'])
+                i.last_seen = datetime.utcnow().strftime("%Y-%m-%d %H:%M")+" UTC"
                 # only include dogecoin nodes (shibetoshi)
-                if i.node_version[:12] == '/Shibetoshi:':
+                if i.node_ver_org[:12] == '/Shibetoshi:' and i.node_height > 0:
                     retInventory.append(i)
     return retInventory
 

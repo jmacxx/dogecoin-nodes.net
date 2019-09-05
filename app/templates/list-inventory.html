@@ -7,7 +7,8 @@
     <tr>
         <th>#</th>
         <th>IP Address</th>
-        <th>Version</th>
+        <th>Org Version</th>
+        <th>New Version</th>
         <th class="padding:revert">Country</th>
         <th>Height</th>
         <th>Flags</th>
@@ -18,16 +19,19 @@
         <tr>
             <td>{{ post.count }}</td>
             <td>{{ post.node_ip }}</td>
-            <td>{{ post.node_version }}</td>
+            <td>{{ post.node_ver_org }}</td>
+            <td>{{ post.node_ver_new }}</td>
             <td>{{ post.node_country }} <img src="/static/images/thumb.{{ post.node_country }}.png"></img></td>
             <td>{{ post.node_height }}</td>
             <td>{{ post.node_flags }}</td>
             {% if post.id == 0 %}
                 <td>VERY NEW!!</td>
+            {% elif post.has_been_updated() %}
+                <td><a href="/item-detail/{{ post.id }}">VERY UPGRADED!</a></td>
             {% elif post.needs_update() %}
-                <td><a href="/item-detail/{{ post.id }}">SUCH UPDATE NEEDED</a></td>
+                <td><a href="/item-detail/{{ post.id }}">SUCH UPGRADE NEEDED</a></td>
             {% else %}
-                <td>VERY CURRENT</td>
+                <td><a href="/item-detail/{{ post.id }}">SO CURRENT</a></td>
             {% endif %}
         </tr>
     {% endfor %}

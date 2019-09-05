@@ -9,7 +9,8 @@ from app.models import Inventory
 class ClaimPrizeForm(FlaskForm):
     nodeipaddress = StringField('Node ipaddress', default="hello_world", validators=[DataRequired()])
     youripaddress = StringField('Your ipaddress', default="hello_world", validators=[DataRequired()])
-    nodeversion = StringField('Node version', default="hello_world", validators=[DataRequired()])
+    nodeversionorg = StringField('Node version (original)', default="hello_world", validators=[DataRequired()])
+    nodeversionnew = StringField('Node version (new)', default="hello_world", validators=[DataRequired()])
     dogecoinaddress = StringField('Dogecoin Address', validators=[DataRequired()])
     submit = SubmitField('Send me Dogecoinz!')
 
@@ -22,9 +23,12 @@ class ClaimPrizeForm(FlaskForm):
             raise ValidationError('Dogecoin address is not valid.')
         pass
 
-    def validate_nodeversion(self, nodeversion):
+    def validate_nodeversionorg(self, nodeversionorg):
+        pass
+
+    def validate_nodeversionnew(self, nodeversionnew):
         # JMC what if the user spoofed the form submittal replacing nodeversion?
-        if nodeversion.data[:19] != app.config['DOGECOIN_NODE_VERSION']:
+        if nodeversionnew.data[:19] != app.config['DOGECOIN_NODE_VERSION']:
             raise ValidationError('Please upgrade your node.')
         pass
 

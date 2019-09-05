@@ -68,10 +68,9 @@
     tasks to be worked on
     ~~~~~~~~~~~~~~~~~~~~~
     create a module to handle doge transaction sending.  use a private key stored in config.py
-    in the DB, store both the original and the current node version (not sure if this is necessary)
     the textual information presented to users could be improved
-    show small flag icons next to country digraph in node list (https://github.com/hjnilsson/country-flags)
     store the current reward bounty in the database, or in an env variable?
+    filter out records where the block height is not in consensus
 
 
 

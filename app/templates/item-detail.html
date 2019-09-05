@@ -16,18 +16,28 @@
         <h4>
         <table border=0>
         <tr><td>IP:</td><td>{{ post.node_ip }}</td><td>&nbsp;</td><td></td></tr>
-        <tr><td>Version:</td><td>{{ post.node_version }}</td><td>&nbsp;</td><td></td></tr>
+        <tr><td>Org Version:</td><td>{{ post.node_ver_org }}</td><td>&nbsp;</td><td></td></tr>
+        <tr><td>New Version:</td><td>{{ post.node_ver_new }}</td><td>&nbsp;</td><td></td></tr>
         <tr><td>Country:</td><td>{{ post.node_country }} <img src="/static/images/thumb.{{ post.node_country }}.png"></img></td><td>&nbsp;</td><td></td></tr>
 
 			
         <tr><td>Height:</td><td>{{ post.node_height }}</td><td>&nbsp;</td><td></td></tr>
         <tr><td>Flags:</td><td>{{ post.node_flags }}</td><td>&nbsp;</td><td></td></tr>
+        <tr><td>Last Seen:</td><td>{{ post.last_seen }}</td><td>&nbsp;</td><td></td></tr>
         </table>
         </h4>
-        {% if post.needs_update() %}
+        {% if post.reward_claimed() %}
             <br />
-            <h4>SUCH UPDATE NEEDED</h4>
-            Is this your node?  Upgrade it to 1.14 and <a href="/claim/{{ post.id }}">claim</a> a reward of D{{ post.reward_amount }}!!
+            <h4>UPGRADE REWARD HAS BEEN CLAIMED!</h4>
+		    <a href="https://chain.so/tx/doge/{{ post.prize_txid }}">TxID: {{ post.prize_txid }}</a>
+        {% elif post.has_been_updated() %}
+            <br />
+            <h4>ELIGIBLE FOR UPGRADE REWARD</h4>
+            <a href="/claim/{{ post.id }}">Claim</a> a reward of D{{ post.reward_amount }}!!
+        {% elif post.needs_update() %}
+            <br />
+            <h4>ELIGIBLE FOR UPGRADE REWARD</h4>
+            Once you have upgraded, <a href="/claim/{{ post.id }}">claim</a> a reward of D{{ post.reward_amount }}!!
         {% else %}
             <br>Not eligible for upgrade reward.  Such sad.
         {% endif %}

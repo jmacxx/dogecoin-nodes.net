@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+   {{ super() }}
+    <center>
+    Congratulations we have sent your prize of {{ prize_amount }} Dogecoin!
+    <br />
+    <br />
+    Here is the transaction id: {{ prize_txid }}
+    <br />
+    <br />
+    <a href="https://chain.so/tx/doge/{{ prize_txid }}">Open in block explorer</a>
+    <br />
+    <br />
+    <br />
+
+    </center>
+    <br /><br />
+
+{% endblock %}
+

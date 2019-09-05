@@ -21,9 +21,16 @@
 		        {% endfor %}
 		    </p>
 		    <p>
-		        {{ form.nodeversion.label }}<br>
-		        {{ form.nodeversion(size=32, style="width: 50%", readonly=true) }}<br>
-		        {% for error in form.nodeversion.errors %}
+		        {{ form.nodeversionorg.label }}<br>
+		        {{ form.nodeversionorg(size=32, style="width: 50%", readonly=true) }}<br>
+		        {% for error in form.nodeversionorg.errors %}
+		        <span style="color: red;">[{{ error }}]</span>
+		        {% endfor %}
+		    </p>
+		    <p>
+		        {{ form.nodeversionnew.label }}<br>
+		        {{ form.nodeversionnew(size=32, style="width: 50%", readonly=true) }}<br>
+		        {% for error in form.nodeversionnew.errors %}
 		        <span style="color: red;">[{{ error }}]</span>
 		        {% endfor %}
 		    </p>
