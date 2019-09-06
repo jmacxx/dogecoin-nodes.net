@@ -146,4 +146,5 @@ def get_countries():
     retVal = []
     for value in db.session.query(Inventory.node_country).distinct():
         retVal.append(value.node_country)
+    retVal.sort()
     return retVal
