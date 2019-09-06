@@ -18,12 +18,31 @@ def index():
 def list_inventory():
     # we are only going to allow the ones that are in the original database list to be eligible for prize
     # this is to prevent people gaming the system by intentionally setting up new nodes with old versions
+    filter = request.args.get('filter')
+    country = request.args.get('country')
     invRecords = Inventory.query.all()
+    dispRecords = []
     count = 0
     for post in invRecords:
+        if post.has_been_updated():
+            post.status_text = "VERY UPGRADED!"
+            if filter is not None and filter != "very-upgraded":
+                continue
+        elif post.needs_update():
+            post.status_text = "SUCH UPGRADE NEEDED"
+            if filter is not None and filter != "such-upgrade-needed":
+                continue
+        else:
+            post.status_text = "SO CURRENT"
+            if filter is not None and filter != "so-current":
+                continue
+        if country is not None and country != post.node_country:
+            continue
         count = count + 1
         post.count = count
-    return render_template('list-inventory.html', title='List Nodes', posts=invRecords, reward_amount=current_dogecoin_reward())
+        dispRecords.append(post)
+    countries = get_countries()
+    return render_template('list-inventory.html', title='List Nodes', posts=dispRecords, countries=countries, reward_amount=current_dogecoin_reward())
 
 
 @app.route('/init-db')
@@ -44,19 +63,15 @@ def init_db():
 # NB: it intentionally does not add new records to the snapshot
 @app.route('/refresh-db')
 def refresh_db():
+    db_list = db.session.query(Inventory).all()
     posts = getCurrentNodeListFromWeb()
-    count = 0
-    for new_rec in posts:
-        count = count + 1
-        new_rec.count = count
-        db_rec = db.session.query(Inventory).filter(Inventory.node_ip == new_rec.node_ip).first()
-        if db_rec is None:
-            new_rec.id = 0
-        else:
-            new_rec.id = db_rec.id
-            db_rec.last_seen = new_rec.last_seen
-            db_rec.node_ver_new = new_rec.node_ver_org
-            db.session.commit()  # write the changed fields to the database
+    for db_rec in db_list:
+        for new_rec in posts:
+            if new_rec.node_ip == db_rec.node_ip:
+                db_rec.last_seen = new_rec.last_seen
+                db_rec.node_ver_new = new_rec.node_ver_org
+                break
+    db.session.commit()  # write the changed fields to the database
     return redirect('/index')
 
 
@@ -126,3 +141,9 @@ def normalise_ip_strip_port(in_ip):
 
 def current_dogecoin_reward():
     return app.config['DOGECOIN_REWARD']
+
+def get_countries():
+    retVal = []
+    for value in db.session.query(Inventory.node_country).distinct():
+        retVal.append(value.node_country)
+    return retVal

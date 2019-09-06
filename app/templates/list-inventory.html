@@ -3,6 +3,21 @@
 {% block content %}
    {{ super() }}
     <center>
+    Filters:
+     <a href="/list-inventory">all</a>
+    | <a href="/list-inventory?filter=very-upgraded">very upgraded</a>
+    | <a href="/list-inventory?filter=such-upgrade-needed">such upgrade needed</a>
+    | <a href="/list-inventory?filter=so-current">so current</a>
+    <br />
+    <br />
+    Country:
+     <a href="/list-inventory">all</a>
+    {% for country in countries %}
+    | <a href="/list-inventory?country={{ country }}">{{ country }}</a>
+    {% endfor %}
+    <br />
+    <br />
+
     <table class='input-block-level'>
     <tr>
         <th>#</th>
@@ -12,7 +27,7 @@
         <th class="padding:revert">Country</th>
         <th>Height</th>
         <th>Flags</th>
-        <th>Version 1.x</th>
+        <th>Status</th>
     </tr>
 
     {% for post in posts %}

@@ -29,6 +29,11 @@ class Inventory(db.Model):
             return True
         return False
 
+    def is_current(self):
+        if self.node_ver_org == app.config['DOGECOIN_NODE_VERSION'] or self.node_ver_new == app.config['DOGECOIN_NODE_VERSION']:
+            return True
+        return False
+
     def reward_claimed(self):
         if self.prize_txid is None:
             return False
